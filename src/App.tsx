@@ -1,8 +1,18 @@
 import React from 'react';
+import { createGlobalStyle } from 'styled-components';
 import logo from './logo.svg';
 import './App.css';
 
-function App() {
+createGlobalStyle`
+  html {
+    font-size: 50%;
+  }
+  body {
+    margin: 0;
+  }
+`
+
+export default function App() {
   return (
     <div className="App">
       <header className="App-header">
@@ -22,5 +32,3 @@ function App() {
     </div>
   );
 }
-
-export default App;
