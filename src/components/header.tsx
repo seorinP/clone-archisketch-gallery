@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { AppBar, IconButton, Toolbar } from '@mui/material';
+import { AppBar, IconButton, Toolbar, Tooltip } from '@mui/material';
 import { CloseRounded } from '@mui/icons-material';
 
 export function Header() {
@@ -18,14 +18,16 @@ export function Header() {
                 }}
             >
                 <Toolbar>
-                    <IconButton
-                        size='large'
-                        onClick={handleCloseGallery}
-                    >
-                        <CloseRounded />
-                    </IconButton>
+                    <Tooltip title='닫기' placement='bottom'>
+                        <IconButton
+                            size='large'
+                            onClick={handleCloseGallery}
+                        >
+                            <CloseRounded />
+                        </IconButton>
+                    </Tooltip>
                 </Toolbar>
             </AppBar>
         </>
-    )
+    );
 }
