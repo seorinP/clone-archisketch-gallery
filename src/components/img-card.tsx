@@ -4,14 +4,46 @@ import { ImgSlider } from "./img-slider";
 
 export function ImgCard(props: any) {
     const [isAllChecked, setIsAllChecked] = useState(false);
-    const [isChecked, setIsChecked] = useState(new Array(props.renderings.length).fill(false)); // 체크 여부
-    const [visible, setVisible] = useState<boolean>(true); // 마우스 올렸을 시 메뉴 보이기
+    const [isChecked, setIsChecked] = useState(new Array(props.renderings.length).fill(false));
+    const [visible, setVisible] = useState(new Array(props.renderings.length).fill(false));
     // 참고 :
     // https://egg-programmer.tistory.com/282
     // https://www.freecodecamp.org/news/how-to-work-with-multiple-checkboxes-in-react/
 
 
     let checkedImagesCount = isChecked.filter(item => item === true).length;
+
+    const visibleHandler1 = (position: number) => {
+        const updatedVisibleState = isChecked.map((item: boolean, index: number) =>{
+            if (index === position) { 
+                return true;
+            }
+            else if (index !== position && item===true) {
+                return true;
+            }
+            else {
+                return false;
+            }
+        }
+        );
+        setVisible(updatedVisibleState);
+    }
+
+    const visibleHandler2 = (position: number) => {
+        const updatedVisibleState = isChecked.map((item: boolean, index: number) =>{
+            if (index === position) { 
+                if (item) {
+                    return true;
+                }
+                return false;
+            }
+            else if (index !== position && item===true) {
+                return true;
+            }
+        }
+        );
+        setVisible(updatedVisibleState);
+    }
 
     const checkHandler = (position: number) => {
         const updatedCheckedState = isChecked.map((item: any, index: number) =>
@@ -21,12 +53,17 @@ export function ImgCard(props: any) {
     }
 
     const checkAllHandler = (checked: boolean) => {
-        console.log('checked: ', checked)
         setIsAllChecked(!isAllChecked)
 
-        const updatedCheckedState = isChecked.map(() =>
-            checked ? true : false
-        );
+        const updatedCheckedState = isChecked.map(() =>{
+            if(checked) {
+                setVisible(new Array(props.renderings.length).fill(true));
+                return true;
+            } else {
+                setVisible(new Array(props.renderings.length).fill(false));
+                return false;
+            } 
+        });
         setIsChecked(updatedCheckedState);
     }
 
@@ -45,7 +82,7 @@ export function ImgCard(props: any) {
                     ? props.renderings.map((item: any, idx: string) => (
                         <>
                             <ImageListItem
-                                key={idx}
+                                id={idx}
                                 sx={{
                                     margin: '9px',
                                     '&:hover': {
@@ -53,12 +90,12 @@ export function ImgCard(props: any) {
                                     }
                                 }}
                                 onMouseEnter={() => {
-                                    setVisible(false)
+                                    visibleHandler1(+idx)
                                 }}
                                 onMouseLeave={() => {
-                                    setVisible(true)
-
+                                    visibleHandler2(+idx)
                                 }}
+                                
                             >
                                 <img
                                     style={{
@@ -69,7 +106,7 @@ export function ImgCard(props: any) {
                                     loading='lazy'
                                 />
 
-                                {!visible && <ImageListItemBar
+                                {visible[+idx] && <ImageListItemBar
                                     key={idx}
                                     sx={{
                                         background: 'transparent'
